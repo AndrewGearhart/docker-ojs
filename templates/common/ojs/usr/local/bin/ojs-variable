@@ -1,14 +1,16 @@
 #!/bin/sh
 
-echo "[OJS Variables] Set variable value in config.inc.php"
-echo "     Variable:    [${1}]"
-echo "     New value:   [${2}]"
-echo "     config file: $OJS_CONF"
+var=${1}
+val=${2}
+tmpfile="/tmp/config.inc.php"
 
-#Workarround, to avoid issues when config is a volume:
-cp $OJS_CONF /tmp/config.inc.php
-sed -i -e "s/^${1} =.*/${1} = ${2}/" /tmp/ojs.config.inc.php
-sed -i '/^installed/c\installed = Off' /tmp/config.inc.php
-cp -f /tmp/config.inc.php $OJS_CONF
+echo "[OJS Variables] Set variable value in config.inc.php"
+echo "     Variable:    [$var]"
+echo "     New value:   [$val]"
+echo "     config file: [$OJS_CONF]"
+
+cp $OJS_CONF $tmpfile
+sed -i -e "s/^$var =.*/$var = $val/" $tmpfile
+cat $tmpfile > $OJS_CONF
 
 echo "[OJS Variable] Variable set."
